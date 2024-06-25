@@ -1,3 +1,5 @@
+
+
 export default interface Promocion {
     id: number;
     denominacion: string;
@@ -10,5 +12,6 @@ export default interface Promocion {
     tipoPromocion: string;
     articulos: any[] | null; // Puedes cambiar 'any' a un tipo más específico si lo deseas
     imagenes: { id: number, url: string }[];
+    
   }
   

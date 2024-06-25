@@ -1,3 +1,4 @@
+import Domicilio from "./Domicilio";
 import Empresa from "./Empresa";
 
 export default interface Sucursal {
@@ -10,4 +11,5 @@ export default interface Sucursal {
     promociones: any[];
     empresa: Empresa;
     domicilio: Domicilio;
+  
   }

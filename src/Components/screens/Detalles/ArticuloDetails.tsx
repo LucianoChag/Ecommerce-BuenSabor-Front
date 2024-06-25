@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Container, Grid, Typography, Card, CardContent, CardMedia, Box, Paper, Button } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import ArticuloService from '../../../service/ArticuloService';
 import Articulo from '../../../types/Articulo';
 
@@ -14,7 +14,7 @@ const Detalles: React.FC<DetallesProps> = React.memo(({ addToCart, userRole }) =
   const articuloService = useMemo(() => new ArticuloService(), []);
   const { id } = useParams<{ id: string }>();
   const url = import.meta.env.VITE_API_URL;
-  
+  const navigate = useNavigate(); // Importa y usa useNavigate
 
   useEffect(() => {
     const fetchArticulo = async () => {
@@ -31,8 +31,6 @@ const Detalles: React.FC<DetallesProps> = React.memo(({ addToCart, userRole }) =
 
     fetchArticulo();
   }, [id, articuloService, url]);
-
-
 
   if (!articulo) {
     return <Typography variant="body1">Cargando detalles del artículo...</Typography>;
@@ -60,11 +58,11 @@ const Detalles: React.FC<DetallesProps> = React.memo(({ addToCart, userRole }) =
           <Paper elevation={3} sx={{ p: 2, backgroundColor: '#' }}>
             <CardContent>
               <Box mb={2}>
-                <Typography variant="h6" >Descripción</Typography>
+                <Typography variant="h6">Descripción</Typography>
                 <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 2 }}>{articulo.descripcion || 'Sin descripción'}</Typography>
               </Box>
               <Box mb={2}>
-                <Typography variant="h6" >Detalles</Typography>
+                <Typography variant="h6">Detalles</Typography>
                 <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>Precio:</Typography>
                 <Typography variant="body1" sx={{ mb: 1 }}>{`$${articulo.precioVenta}`}</Typography>
                 {articulo.tiempoEstimadoMinutos && (
@@ -88,8 +86,12 @@ const Detalles: React.FC<DetallesProps> = React.memo(({ addToCart, userRole }) =
             </CardContent>
           </Paper>
         </Grid>
+        <Grid item xs={12}>
+          <Button sx={{ mt: 2, backgroundColor: '#a6c732', color: 'white', '&:hover': { backgroundColor: '#b9d162' } }} onClick={() => navigate(-1)}>
+            Volver
+          </Button>
+        </Grid>
       </Grid>
-     
     </Container>
   );
 });

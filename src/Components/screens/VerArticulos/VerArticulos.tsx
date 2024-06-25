@@ -1,17 +1,18 @@
+// VerArticulos.tsx
 import React, { useState, useEffect } from 'react';
-import { Container, Grid, Typography, CircularProgress, TextField, Select, MenuItem, FormControl, InputLabel, Button, Tooltip, SelectChangeEvent  } from '@mui/material';
-import { useParams, useLocation, Link } from 'react-router-dom';
+import { Container, Grid, Typography, CircularProgress, TextField, Select, MenuItem, FormControl, InputLabel, Button, Tooltip, SelectChangeEvent } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import InfoIcon from '@mui/icons-material/Info';
 import ArticuloService from '../../../service/ArticuloService';
 import CategoriaService from '../../../service/CategoriaService';
 import NoResults from '../../ui/Cards/NoResults/NoResults';
 import TableComponent from '../../ui/TableComponent/TableComponent';
 import Column from '../../../types/Column';
-
+import { useTheme, useMediaQuery } from '@mui/material';
 
 const VerArticulos = () => {
-  const { id } = useParams<{ id: string }>();
-  const location = useLocation();
+  const navigate = useNavigate();
+  
   const [articulos, setArticulos] = useState<any[]>([]);
   const [categorias, setCategorias] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -21,7 +22,9 @@ const VerArticulos = () => {
   const articuloService = new ArticuloService();
   const categoriaService = new CategoriaService();
   const url = import.meta.env.VITE_API_URL;
- 
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     const fetchArticulos = async () => {
@@ -29,9 +32,7 @@ const VerArticulos = () => {
         const manufacturadosData = await articuloService.getAll(url + '/api/manufacturados');
         const insumosData = await articuloService.getAll(url + '/api/insumos');
 
-        // Filtrar insumos cuya propiedad esParaElaborar sea false
         const filteredInsumos = insumosData.filter((insumo: any) => !insumo.esParaElaborar);
-
         const combinedArticulos = [...manufacturadosData, ...filteredInsumos];
 
         if (combinedArticulos.length === 0) {
@@ -50,10 +51,7 @@ const VerArticulos = () => {
     const fetchCategorias = async () => {
       try {
         const categoriasData = await categoriaService.getAll(url + '/api/categorias');
-        
-        // Filtrar categorías para excluir "Insumos"
         const filteredCategorias = categoriasData.filter((categoria: any) => categoria.denominacion !== 'Insumos');
-        
         setCategorias(filteredCategorias);
       } catch (error) {
         console.error('Error al obtener las categorías:', error);
@@ -86,14 +84,21 @@ const VerArticulos = () => {
       id: 'actions',
       label: 'Acciones',
       renderCell: (row) => (
-        <>
-          <Tooltip title="Ver Detalle">
-            <Button sx={{ padding: '5px', backgroundColor: '#a6c732', color: 'white', '&:hover': { backgroundColor: '#b9d162' }, width: '60%' }} onClick={() => handleVerDetalle(row)}>
-              Ver Detalle <InfoIcon />
-            </Button>
-          </Tooltip>
-          
-        </>
+        <Tooltip title="Ver Detalle">
+          <Button
+            sx={{
+              padding: '5px',
+              backgroundColor: '#a6c732',
+              color: 'white',
+              '&:hover': { backgroundColor: '#b9d162' },
+              minWidth: isMobile ? 'auto' : '60%',
+              
+            }}
+            onClick={() => handleVerDetalle(row)}
+          >
+            <InfoIcon />
+          </Button>
+        </Tooltip>
       ),
     },
   ];
@@ -152,11 +157,7 @@ const VerArticulos = () => {
           pagination
         />
       )}
-      {location.pathname !== '/TodosLosArticulos' && (
-        <Link to={`/sucursal/${id}/home`} style={{ marginTop: '20px', display: 'flex', justifyContent: 'left', alignItems: 'left', textDecoration: 'none', color: 'inherit' }}>
-          <Button sx={{ backgroundColor: '#a6c732', color: 'white', '&:hover': { backgroundColor: '#b9d162' }, width: '10%' }} size="small">Volver</Button>
-        </Link>
-      )}
+      <Button sx={{ mt: 2, backgroundColor: '#a6c732', color: 'white', '&:hover': { backgroundColor: '#b9d162' }, width: '10%' }} size="small" onClick={() => navigate(-1)}>Volver</Button>
     </Container>
   );
 };
