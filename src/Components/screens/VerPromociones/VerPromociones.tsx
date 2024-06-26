@@ -2,26 +2,26 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { Container, Typography, Grid } from '@mui/material';
 import PromocionCard from '../../ui/Cards/Promocion/PromocionCard'; 
-import SucursalService from '../../../service/SucursalService';
 import Promocion from '../../../types/Promocion';
 import Button from '@mui/material/Button';
+import PromocionService from '../../../service/PromocionService';
 
 const VerPromociones: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const navigate = useNavigate();
   const [promociones, setPromociones] = useState<Promocion[]>([]);
-  const sucursalService = useMemo(() => new SucursalService(), []);
+  const promocionService = useMemo(() => new PromocionService(), []);
   const url = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchPromociones = async () => {
       try {
         if (location.pathname === "/TodasLasPromociones") {
-          const allPromociones = await sucursalService.getAll(`${url}/api/promociones`);
+          const allPromociones = await promocionService.getAll(`${url}/api/promociones`);
           setPromociones(allPromociones);
         } else {
-          const fetchedSucursal = await sucursalService.get(`${url}/api/sucursales`, parseInt(id!));
+          const fetchedSucursal = await promocionService.get(`${url}/api/sucursales`, parseInt(id!));
           const promocionesAnidadas = fetchedSucursal.domicilio?.sucursal?.promociones;
           if (Array.isArray(promocionesAnidadas)) {
             setPromociones(promocionesAnidadas);
@@ -33,7 +33,7 @@ const VerPromociones: React.FC = () => {
     };
 
     fetchPromociones();
-  }, [id, sucursalService, url, location.pathname]);
+  }, [id, promocionService, url, location.pathname]);
 
   const handleAddToCart = (promocion: Promocion) => {
     console.log(`Added to cart: ${promocion.descripcionDescuento}`);

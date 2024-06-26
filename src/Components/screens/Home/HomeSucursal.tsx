@@ -14,11 +14,11 @@ const HomeSucursal: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const [currentSlide, setCurrentSlide] = useState(0);
     const [sucursal, setSucursal] = useState<Sucursal | null>(null);
-    const [promociones, setPromociones] = useState<Promocion[]>([]);
+    const [_promociones, setPromociones] = useState<Promocion[]>([]);
     const url = import.meta.env.VITE_API_URL;
 
     const sucursalService = useMemo(() => new SucursalService(), []);
-
+    
     useEffect(() => {
         const fetchSucursal = async () => {
             if (id !== undefined) {
@@ -61,9 +61,6 @@ const HomeSucursal: React.FC = () => {
         setCurrentSlide(currentSlide === 0 ? images.length - 1 : currentSlide - 1);
     };
 
-    const handleAddToCart = (promocion: Promocion) => {
-        console.log(`Added to cart: ${promocion.descripcionDescuento}`);
-    };
 
     if (!sucursal) {
         return <Typography variant="body1">Cargando sucursal...</Typography>;

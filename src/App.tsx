@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./Components/ui/common/NavBar/NavBar";
 import Detalles from "./Components/screens/Detalles/ArticuloDetails";
 import { useAuth } from "./contexts/AuthContext";
-import { useCart } from "./contexts/CartContext";
+// Eliminamos el import de useCart
 import NotFound from "./Components/screens/NotFound/NotFound";
 import PromotionDetails from "./Components/screens/Detalles/PromocionDetails";
 import VerArticulos from "./Components/screens/VerArticulos/VerArticulos";
@@ -14,7 +14,8 @@ import VerPromociones from "./Components/screens/VerPromociones/VerPromociones";
 
 const App: React.FC = () => {
   const { login, userRole } = useAuth();
-  const { addToCart } = useCart();
+  // Eliminamos el uso de useCart
+  // const { addToCart } = useCart();
 
   useEffect(() => {
     const authInfo = localStorage.getItem("authInfo");
@@ -35,20 +36,9 @@ const App: React.FC = () => {
           <Route path="/sucursal/:id/Promociones" element={<VerPromociones />} />
           <Route path="/TodosLosArticulos" element={<VerArticulos />} />
           <Route path="/TodasLasPromociones" element={<VerPromociones />} />
-          
-
-          
-          
-
-          <Route
-            path="/detalles/:id"
-            element={<Detalles addToCart={addToCart} userRole={userRole} />}
-          />
-          <Route
-            path="/detallesPromocion/:id"
-            element={<PromotionDetails addToCart={addToCart} userRole={userRole} />}
-          />
-
+          {/* Eliminamos el prop addToCart */}
+          <Route path="/detalles/:id" element={<Detalles userRole={userRole} />} />
+          <Route path="/detallesPromocion/:id" element={<PromotionDetails userRole={userRole} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

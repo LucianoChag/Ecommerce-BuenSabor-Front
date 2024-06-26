@@ -4,11 +4,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import PromotionService from '../../../service/PromocionService';
 
 interface DetallesProps {
-  addToCart: (id: number, cart: any[]) => void;
   userRole: string;
 }
 
-const PromotionDetails: React.FC<DetallesProps> = React.memo(({ addToCart, userRole }) => {
+const PromotionDetails: React.FC<DetallesProps> = React.memo(() => {
   const [promotion, setPromotion] = useState<any>(null);
   const promotionService = useMemo(() => new PromotionService(), []);
   const { id } = useParams<{ id: string }>();
@@ -80,11 +79,7 @@ const PromotionDetails: React.FC<DetallesProps> = React.memo(({ addToCart, userR
                     </Grid>
                   ))}
                 </Grid>
-                {userRole === 'VISOR' && (
-                  <Grid item xs={12}>
-                    <Button sx={{ mt: 2, width: '100%', backgroundColor: '#8e24aa', color: 'white' }} variant="contained" onClick={() => addToCart(promotion.id, [promotion])}>Agregar al carrito</Button>
-                  </Grid>
-                )}
+                
               </Box>
             </CardContent>
           </Paper>

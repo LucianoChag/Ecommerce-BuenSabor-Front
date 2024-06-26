@@ -5,11 +5,11 @@ import ArticuloService from '../../../service/ArticuloService';
 import Articulo from '../../../types/Articulo';
 
 interface DetallesProps {
-  addToCart: (id: number, cart: any[]) => void;
+  
   userRole: string;
 }
 
-const Detalles: React.FC<DetallesProps> = React.memo(({ addToCart, userRole }) => {
+const Detalles: React.FC<DetallesProps> = React.memo(() => {
   const [articulo, setArticulo] = useState<Articulo>();
   const articuloService = useMemo(() => new ArticuloService(), []);
   const { id } = useParams<{ id: string }>();
@@ -77,11 +77,7 @@ const Detalles: React.FC<DetallesProps> = React.memo(({ addToCart, userRole }) =
                     <Typography variant="body1" sx={{ mb: 1 }}>{articulo.categoria.denominacion}</Typography>
                   </>
                 )}
-                {userRole === 'VISOR' && (
-                  <Grid item xs={12}>
-                    <Button sx={{ mt: 2, width: '100%', backgroundColor: '#8e24aa', color: 'white' }} variant="contained" onClick={() => addToCart(articulo.id, [articulo])}>Agregar al carrito</Button>
-                  </Grid>
-                )}
+                
               </Box>
             </CardContent>
           </Paper>
